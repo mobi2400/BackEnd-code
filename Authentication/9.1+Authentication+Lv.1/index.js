@@ -9,8 +9,8 @@ const port = 3000;
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
-  database: "secrets",
-  password: "123456",
+  database: "Secret",
+  password: "Khan9931@#",
   port: 5432,
 });
 db.connect();
@@ -31,9 +31,10 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
- 
+ const email = req.body.username;
+ const password = req.body.password;
   const result = await db.query(
-    "INSERT INTO users (email , password) VALUE ($1, $2)",
+    "INSERT INTO users (email , password) VALUES ($1, $2)",
     [email,password]
   );
   console.log(result);
