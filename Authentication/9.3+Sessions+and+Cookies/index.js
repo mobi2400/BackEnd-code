@@ -84,6 +84,12 @@ app.post("/register", async (req, res) => {
             "INSERT INTO users (email, password) VALUES ($1, $2)",
             [email, hash]
           );
+          const user = result.row[0];
+          req.login(user,(err)=>{
+            console.log(err)
+            res.redirect("/secrets")
+            
+          })
           res.render("secrets.ejs");
         }
       });
