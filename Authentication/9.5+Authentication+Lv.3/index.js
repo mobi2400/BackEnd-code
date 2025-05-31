@@ -4,6 +4,7 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import passport from "passport";
 import { Strategy } from "passport-local";
+import GoogleStrategy from "passport-google-oauth2";
 import session from "express-session";
 import env from "dotenv";
 
@@ -64,6 +65,10 @@ app.get("/secrets", (req, res) => {
     res.redirect("/login");
   }
 });
+
+app.get("/auth/google",passport.authenticate("google",{
+  scope : ["profile","email"],
+}))
 
 app.post(
   "/login",
@@ -138,6 +143,17 @@ passport.use(
     }
   })
 );
+
+passport.use("google",new GoogleStrategy({
+  clientID : process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
+  callbackURL : "http://localhost:3000/auth/google/secrets",
+  userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+}, async(accessToken,refresTokem,Profiler,cb)=>{
+
+}
+
+))
 
 passport.serializeUser((user, cb) => {
   cb(null, user);
