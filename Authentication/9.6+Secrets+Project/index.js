@@ -56,7 +56,7 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.get("/secrets", (req, res) => {
+app.get("/submit", (req, res) => {
   if (req.isAuthenticated()) {
     res.render("secrets.ejs");
 
@@ -92,6 +92,20 @@ app.get(
     failureRedirect: "/login",
   })
 );
+
+app.post("/submit",async (req,res)=>{
+  const secret = req.body.secret;
+ try {
+  await db.query("UPDATE users SET secret = $1 WHERE email = $2",[
+    secret,
+    req.user.email,
+  ])
+  res.redirect('/login')
+ } catch (err) {
+  console.log(err);
+  
+ }
+})
 
 app.post(
   "/login",
